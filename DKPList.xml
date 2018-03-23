@@ -295,7 +295,10 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnClick>DKPList_RefreshRoster();</OnClick>
+					<OnClick>
+						DKPList_RefreshRoster();
+						DKPList_UpdateDKPElements();
+					</OnClick>
 				</Scripts>
 			</Button>
 			<!-- reset button -->

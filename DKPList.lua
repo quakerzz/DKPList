@@ -29,12 +29,8 @@ local CLASS_FILTER = {
 	{ "Warrior",	1},
 }
 
-function HelloWorld()
-    message('HelloWorld');
-end
-
 function DKPList_OnLoad()
-	message("DKPList Version 0.1");
+	--message("DKPList Version 0.1");
 	DKPList_InitializeTableElements();
     DKPList_MinimapButtonFrame:Show();
     this:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -51,7 +47,7 @@ end
 --	Guild and Raid Roster Event Handling
 --
 --	RaidRoster will update internal raid roster table.
---	GuildRoster will update guild roster table and check job queue
+--	GuildRoster will update guild roster table
 --
 
 function DKPList_RequestUpdateGuildRoster()
@@ -64,8 +60,6 @@ end
 	(/gdclass and /gdstat)
 ]]
 function DKPList_RefreshGuildRoster()
-	--echo("Refreshing GuildRoster");
-
 	DKPList_GuildRosterTable = { }
 	
 	if not CanViewOfficerNote() then
@@ -111,7 +105,6 @@ function DKPList_RefreshGuildRoster()
 			dkp = "";
 		else
 			DKPList_GuildRosterTable[getn(DKPList_GuildRosterTable) + 1] = { name, (1*dkp), class, rank, online, zone }
-			--echo(string.format("Added %s (%s)", name, online));
 		end
 	end
 	table.sort(DKPList_GuildRosterTable, DKPList_compare);
@@ -160,12 +153,6 @@ function DKPList_RefreshRaidRoster()
 		end
 	end
 	table.sort(DKPList_RaidRosterTable, DKPList_compare);
-	
---	for n=1,table.getn(DKPList_RaidRosterTable), 1 do
---		local rr = DKPList_RaidRosterTable[n];
---		echo("RaidRosterUpdate:");
---		echo(string.format("Name=%s, DKP=%d, Class=%s, Rank=%s", rr[1], rr[2], rr[3], rr[4]));
---	end
 end
 
 function DKPList_CanReadNotes()
