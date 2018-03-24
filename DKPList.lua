@@ -1,9 +1,11 @@
-local MAX_ENTRIES = 20;
+local MAX_ENTRIES = 40;
+local MAX_ENTRIES_SHOWN = 20;
 -- Raid Roster: table of raid players:		{ Name, DKP, Class, Rank, Online }
 local DKPList_RaidRosterTable			= { }
 -- Guild Roster: table of guild players:	{ Name, DKP, Class, Rank, Online, Zone }
 local DKPList_GuildRosterTable			= { }
 local DKPList_CheckForInRaid = 0;
+local DKPList_ScrollCounter = 0;
 
 local CLASS_COLORS = {
 	{ "Druid",			{ 255,125, 10 } },	--255 	125 	10		1.00 	0.49 	0.04 	#FF7D0A
@@ -31,16 +33,23 @@ local CLASS_FILTER = {
 
 function DKPList_OnLoad()
 	--message("DKPList Version 0.1");
+	this:RegisterEvent("ADDON_LOADED");
+    this:RegisterEvent("GUILD_ROSTER_UPDATE");
+	this:RegisterEvent("RAID_ROSTER_UPDATE");
+	this:RegisterEvent("PLAYER_ENTERING_WORLD");
+	DKPList_RefreshRoster();
 	DKPList_InitializeTableElements();
     DKPList_MinimapButtonFrame:Show();
-    this:RegisterEvent("PLAYER_ENTERING_WORLD");
+end
+
+function SOTA_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
 end
 
 function DKPList_OnClickMinimapButton()
 	DKPListUIFrame:Show();
 	DKPList_ShowClassButtons();
     DKPList_RefreshRoster();
-    DKPList_UpdateDKPElements();
+	DKPList_ScrollBarUpdate();
 end
 
 --
@@ -173,7 +182,7 @@ function DKPList_UpdateDKPElements()
 	if DKPList_CheckForInRaid == 0 then dkplist = DKPList_GuildRosterTable
 	else dkplist = DKPList_RaidRosterTable end
 
-	for n=1, MAX_ENTRIES, 1 do
+	for n=1, MAX_ENTRIES_SHOWN, 1 do
 		if table.getn(dkplist) < n then
 			name = "";
 			dkp = "";
@@ -194,15 +203,13 @@ function DKPList_UpdateDKPElements()
 
 		local color = DKPList_GetClassColorCodes(playerclass);
 
-		local frame = getglobal("DKPListUIFrameTableListEntry"..n);
-		--message(getglobal(frame:GetName()));
+		local frame = getglobal("DKPListUIFrameTableListScrollFrameEntry"..n);
 		getglobal(frame:GetName().."Name"):SetText(name);
 		getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
 		getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);
 		getglobal(frame:GetName().."DKP"):SetText(dkp);
 		getglobal(frame:GetName().."Rank"):SetText(rank);
 
-		--SOTA_RefreshButtonStates();
 		frame:Show();
     end
 end
@@ -374,6 +381,17 @@ function DKPList_FilterAllClasses()
 	end
 end
 
+function DKPList_OnMouseWheel(arg1)
+	-- message(arg1)
+	-- if arg1 == -1 then DKPList_ScrollCounter = DKPList_ScrollCounter + 1 end
+	-- if arg1 == 1 then DKPList_ScrollCounter = DKPList_ScrollCounter -1 end
+	-- if DKPList_ScrollCounter < 0 then DKPList_ScrollCounter = 0 end
+	-- message(DKPList_ScrollCounter);
+	-- DKPList_RefreshRoster();
+	-- DKPList_UpdateDKPElements();
+	return
+end
+
 function DKPList_CloseUI()
 	DKPListUIFrame:Hide();
 end
@@ -393,11 +411,11 @@ end
 
 function DKPList_InitializeTableElements()
 	--	Initialize top <n> bids
-	for n=1, MAX_ENTRIES, 1 do
-		local entry = CreateFrame("Button", "$parentEntry"..n, DKPListUIFrameTableList, "DKPList_EntryTemplate");
+	for n=1, MAX_ENTRIES_SHOWN, 1 do
+		local entry = CreateFrame("Button", "$parentEntry"..n, DKPListUIFrameTableListScrollFrame, "DKPList_EntryTemplate");
 		entry:SetID(n);
 		if n == 1 then
-			entry:SetPoint("TOPLEFT", 4, -4);
+			entry:SetPoint("TOPLEFT", 4, 2);
 		else
 			entry:SetPoint("TOP", "$parentEntry"..(n-1), "BOTTOM");
 		end
@@ -406,4 +424,53 @@ end
 
 function DKPList_compare(a,b)
 	return a[2] > b[2]
+end
+
+function DKPList_ScrollBarUpdate()
+	FauxScrollFrame_Update(DKPListUIFrameTableListScrollFrame,MAX_ENTRIES,MAX_ENTRIES_SHOWN,16,
+	nil, nil, nil,                  -- button, smallWidth, bigWidth
+	nil,                            -- highlightFrame
+	0, 0);                          -- smallHighlightWidth, bigHighlightWidth
+	  -- 50 is max entries, 5 is number of lines, 16 is pixel height of each line
+	local name, dkp, playerclass, rank;
+	local dkplist = {}
+	local nplusoffset;
+
+	if DKPList_CheckForInRaid == 0 then dkplist = DKPList_GuildRosterTable
+	else dkplist = DKPList_RaidRosterTable end
+	for n=1,MAX_ENTRIES_SHOWN,1 do
+		nplusoffset = n + FauxScrollFrame_GetOffset(DKPListUIFrameTableListScrollFrame);
+		local frame = getglobal("DKPListUIFrameTableListScrollFrameEntry"..n);
+		if nplusoffset < MAX_ENTRIES then
+			if table.getn(dkplist) <= nplusoffset then
+				name = "";
+				dkp = "";
+				bidcolor = { 64, 255, 64 };
+				playerclass = "";
+				rank = "";
+			else
+				local cbid = dkplist[nplusoffset];
+				name = cbid[1];
+				bidcolor = { 64, 255, 64 };
+				if cbid[3] == 2 then
+					bidcolor = { 255, 255, 96 };
+				end
+				dkp = string.format("%d", cbid[2]);
+				playerclass = cbid[3];
+				rank = cbid[4];
+			end
+		
+			local color = DKPList_GetClassColorCodes(playerclass);
+
+			getglobal(frame:GetName().."Name"):SetText(name);
+			getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
+			getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);
+			getglobal(frame:GetName().."DKP"):SetText(dkp);
+			getglobal(frame:GetName().."Rank"):SetText(rank);
+		
+			frame:Show();
+		else			
+			frame:Hide();
+		end
+	end
 end

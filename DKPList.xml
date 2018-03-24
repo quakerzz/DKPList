@@ -42,23 +42,27 @@
 				</FontString>
 			</Layer>
 		</Layers>
+		<NormalTexture name="$parentBG">
+			<Color r="0.0" g="0.0" b="0.0" a="0.5"/>
+		</NormalTexture>
 		<Scripts>
 			<OnClick>
 				PlaySound("igMainMenuOptionCheckBoxOn")
+				getglobal(this:GetName().."BG"):SetVertexColor(1.0, 1.0, 1.0, 1.0)
 			</OnClick>
 			<OnEnter>
-				getglobal(this:GetName().."BG"):SetVertexColor(1, 1, 1, 1)
+				getglobal(this:GetName().."BG"):SetVertexColor(1.0, 1.0, 1.0, 1.0)
 			</OnEnter>
 			<OnLeave>
-				getglobal(this:GetName().."BG"):SetVertexColor(0.7, 0.7, 0.7, 0.7)
+				getglobal(this:GetName().."BG"):SetVertexColor(0.0, 0.0, 0.0, 0.5)
 			</OnLeave>
 			<OnLoad>
 				this:GetScript("OnLeave")(this)
 			</OnLoad>
+			<!-- <OnMouseWheel>
+				DKPList_OnMouseWheel(arg1);
+			</OnMouseWheel> -->
 		</Scripts>
-		<NormalTexture name="$parentBG">
-			<Color r="0.0" g="0.0" b="0.5" a="0.5"/>
-		</NormalTexture>
 	</Button>
 
     <Button name="DKPList_MinimapButtonFrame" toplevel="true" frameStrata="HIGH" parent="Minimap" enableMouse="true" movable="true" hidden="false">
@@ -120,7 +124,7 @@
 		</Scripts>
 	</Button>
 
-	<!--	Auction UI Frame	-->
+	<!--	DKPList UI Frame	-->
 	<Frame name="DKPListUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
 			<AbsDimension x="460" y="450" />
@@ -163,6 +167,30 @@
 						<AbsValue val="16"/>
 					</TileSize>
 				</Backdrop>
+				<Frames>
+					<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="0" y="-8"/>
+						</Offset>
+						</Anchor>
+						<Anchor point="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="-30" y="8"/>
+						</Offset>
+						</Anchor>
+					</Anchors>
+    		    	<Scripts>
+    		    	  <OnVerticalScroll>
+    		    	    FauxScrollFrame_OnVerticalScroll(16, DKPList_ScrollBarUpdate);
+    		    	  </OnVerticalScroll>
+    		    	  <OnShow>
+    		    	    DKPList_ScrollBarUpdate();
+    		    	  </OnShow>
+    		    	</Scripts>
+					</ScrollFrame>
+				</Frames>
 			</Frame>
 			<!-- Buttons to filter classes -->
 			<Button name="DKPList_DruidButton" inherits="UIPanelButtonTemplate" text="Druid">
@@ -392,6 +420,11 @@
 			<OnLoad>
 				DKPList_OnLoad();
 			</OnLoad>
+			<OnEvent>
+				if (DKPList_OnEvent) then
+					DKPList_OnEvent(event, arg1, arg2, arg3, arg4, arg5);
+				end
+			</OnEvent>
 		</Scripts>
 	</Frame>
 </Ui>
