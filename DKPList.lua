@@ -66,7 +66,6 @@ end
 --[[
 	Update the guild roster status cache: members and DKP.
 	Used to display DKP values for non-raiding members
-	(/gdclass and /gdstat)
 ]]
 function DKPList_RefreshGuildRoster()
 	DKPList_GuildRosterTable = { }
@@ -137,7 +136,6 @@ function DKPList_GetRaidInfoForPlayer(playername)
 	return nil;
 end
 
-
 --[[
 	Re-read the raid status and namely the DKP values.
 	Should be called after each roster update.
@@ -204,6 +202,7 @@ function DKPList_UpdateDKPElements()
 		local color = DKPList_GetClassColorCodes(playerclass);
 
 		local frame = getglobal("DKPListUIFrameTableListScrollFrameEntry"..n);
+
 		getglobal(frame:GetName().."Name"):SetText(name);
 		getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
 		getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);
@@ -346,7 +345,6 @@ function DKPList_WarriorButtonOnClick()
 	DKPList_UpdateDKPElements();
 end
 
-
 function DKPList_ShowClassButtons()
 	DKPList_DruidButton:Show();
 	DKPList_HunterButton:Show();
@@ -379,17 +377,6 @@ function DKPList_FilterAllClasses()
 	for n=1,getn(CLASS_FILTER),1 do
 		CLASS_FILTER[n][2] = 0;
 	end
-end
-
-function DKPList_OnMouseWheel(arg1)
-	-- message(arg1)
-	-- if arg1 == -1 then DKPList_ScrollCounter = DKPList_ScrollCounter + 1 end
-	-- if arg1 == 1 then DKPList_ScrollCounter = DKPList_ScrollCounter -1 end
-	-- if DKPList_ScrollCounter < 0 then DKPList_ScrollCounter = 0 end
-	-- message(DKPList_ScrollCounter);
-	-- DKPList_RefreshRoster();
-	-- DKPList_UpdateDKPElements();
-	return
 end
 
 function DKPList_CloseUI()
@@ -461,7 +448,7 @@ function DKPList_ScrollBarUpdate()
 			end
 		
 			local color = DKPList_GetClassColorCodes(playerclass);
-
+			
 			getglobal(frame:GetName().."Name"):SetText(name);
 			getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
 			getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);

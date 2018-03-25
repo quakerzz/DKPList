@@ -43,12 +43,18 @@
 			</Layer>
 		</Layers>
 		<NormalTexture name="$parentBG">
-			<Color r="0.0" g="0.0" b="0.0" a="0.5"/>
+			<Color r="0.0" g="0.0" b="0.0" a="0.7"/>
 		</NormalTexture>
+		<HighlightTexture name="$parentHL">
+			<Color r="1.0" g="0.9" b="0.0" a="0.3"/>
+		</HighlightTexture>
+		<PushedTexture name="$parentPU">
+			<Color r="1.0" g="0.9" b="0.0" a="0.3"/>
+		</PushedTexture>
 		<Scripts>
 			<OnClick>
 				PlaySound("igMainMenuOptionCheckBoxOn")
-				getglobal(this:GetName().."BG"):SetVertexColor(1.0, 1.0, 1.0, 1.0)
+				getglobal(this:GetName().."BG"):SetVertexColor(1.0, 1.0, 1.0, 1.0)	
 			</OnClick>
 			<OnEnter>
 				getglobal(this:GetName().."BG"):SetVertexColor(1.0, 1.0, 1.0, 1.0)
@@ -59,9 +65,6 @@
 			<OnLoad>
 				this:GetScript("OnLeave")(this)
 			</OnLoad>
-			<!-- <OnMouseWheel>
-				DKPList_OnMouseWheel(arg1);
-			</OnMouseWheel> -->
 		</Scripts>
 	</Button>
 
