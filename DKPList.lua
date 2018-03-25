@@ -69,10 +69,6 @@ end
 ]]
 function DKPList_RefreshGuildRoster()
 	DKPList_GuildRosterTable = { }
-	
-	if not CanViewOfficerNote() then
-		return;
-	end
 
 	local memberCount = GetNumGuildMembers();
 	local note
@@ -191,9 +187,6 @@ function DKPList_UpdateDKPElements()
 			local cbid = dkplist[n];
 			name = cbid[1];
 			bidcolor = { 64, 255, 64 };
-			if cbid[3] == 2 then
-				bidcolor = { 255, 255, 96 };
-			end
 			dkp = string.format("%d", cbid[2]);
 			playerclass = cbid[3];
 			rank = cbid[4];
@@ -439,9 +432,6 @@ function DKPList_ScrollBarUpdate()
 				local cbid = dkplist[nplusoffset];
 				name = cbid[1];
 				bidcolor = { 64, 255, 64 };
-				if cbid[3] == 2 then
-					bidcolor = { 255, 255, 96 };
-				end
 				dkp = string.format("%d", cbid[2]);
 				playerclass = cbid[3];
 				rank = cbid[4];
