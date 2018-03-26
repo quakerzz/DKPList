@@ -161,7 +161,7 @@ end
 
 --	Show top <n> in DKP window
 function DKPList_UpdateDKPElements()
-	local name, dkp, playerclass, rank;
+	local name, dkp, playerclass, rank, numnber;
 	local dkplist = {}
 
 	if DKPList_CheckForInRaid == 0 then dkplist = DKPList_GuildRosterTable
@@ -174,6 +174,7 @@ function DKPList_UpdateDKPElements()
 			bidcolor = { 64, 255, 64 };
 			playerclass = "";
 			rank = "";
+			number = "";
 		else
 			local cbid = dkplist[n];
 			name = cbid[1];
@@ -181,13 +182,14 @@ function DKPList_UpdateDKPElements()
 			dkp = string.format("%d", cbid[2]);
 			playerclass = cbid[3];
 			rank = cbid[4];
+			number = n;
 		end
 
 		local color = DKPList_GetClassColorCodes(playerclass);
 
 		local frame = getglobal("DKPListUIFrameTableListScrollFrameEntry"..n);
 
-		getglobal(frame:GetName().."Number"):SetText(n);		
+		getglobal(frame:GetName().."Number"):SetText(number);		
 		getglobal(frame:GetName().."Name"):SetText(name);
 		getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
 		getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);
@@ -444,7 +446,7 @@ function DKPList_ScrollBarUpdate()
 	nil,                            -- highlightFrame
 	0, 0);                          -- smallHighlightWidth, bigHighlightWidth
 	  -- 50 is max entries, 5 is number of lines, 16 is pixel height of each line
-	local name, dkp, playerclass, rank;
+	local name, dkp, playerclass, rank, number;
 	local dkplist = {}
 	local nplusoffset;
 
@@ -460,6 +462,7 @@ function DKPList_ScrollBarUpdate()
 				bidcolor = { 64, 255, 64 };
 				playerclass = "";
 				rank = "";
+				number = "";
 			else
 				local cbid = dkplist[nplusoffset];
 				name = cbid[1];
@@ -467,11 +470,12 @@ function DKPList_ScrollBarUpdate()
 				dkp = string.format("%d", cbid[2]);
 				playerclass = cbid[3];
 				rank = cbid[4];
+				number = nplusoffset
 			end
 		
 			local color = DKPList_GetClassColorCodes(playerclass);
 			
-			getglobal(frame:GetName().."Number"):SetText(nplusoffset);
+			getglobal(frame:GetName().."Number"):SetText(number);
 			getglobal(frame:GetName().."Name"):SetText(name);
 			getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
 			getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);
