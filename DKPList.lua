@@ -187,6 +187,7 @@ function DKPList_UpdateDKPElements()
 
 		local frame = getglobal("DKPListUIFrameTableListScrollFrameEntry"..n);
 
+		getglobal(frame:GetName().."Number"):SetText(n);		
 		getglobal(frame:GetName().."Name"):SetText(name);
 		getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
 		getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);
@@ -452,7 +453,7 @@ function DKPList_ScrollBarUpdate()
 	for n=1,MAX_ENTRIES_SHOWN,1 do
 		nplusoffset = n + FauxScrollFrame_GetOffset(DKPListUIFrameTableListScrollFrame);
 		local frame = getglobal("DKPListUIFrameTableListScrollFrameEntry"..n);
-		if nplusoffset < MAX_ENTRIES then
+		if nplusoffset <= MAX_ENTRIES then
 			if table.getn(dkplist) <= nplusoffset then
 				name = "";
 				dkp = "";
@@ -470,6 +471,7 @@ function DKPList_ScrollBarUpdate()
 		
 			local color = DKPList_GetClassColorCodes(playerclass);
 			
+			getglobal(frame:GetName().."Number"):SetText(nplusoffset);
 			getglobal(frame:GetName().."Name"):SetText(name);
 			getglobal(frame:GetName().."Name"):SetTextColor((color[1]/255), (color[2]/255), (color[3]/255), 255);
 			getglobal(frame:GetName().."DKP"):SetTextColor((bidcolor[1]/255), (bidcolor[2]/255), (bidcolor[3]/255), 255);

@@ -8,19 +8,32 @@
 		</Size>
 		<Layers>
 			<Layer>
+				<!-- Player number in list-->
+				<FontString name="$parentNumber" justifyH="RIGHT" inherits="GameFontNormal">
+					<Size>
+						<AbsDimension x="20" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-2" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<Color r="1" g="1" b="1" />
+				</FontString>
 				<!-- Player name -->
 				<FontString name="$parentName" justifyH="LEFT" inherits="GameFontNormal">
 					<Size>
 						<AbsDimension x="100" y="16"/>
 					</Size>
 					<Anchors>
-						<Anchor point="LEFT">
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentNumber">
 							<Offset>
-								<AbsDimension x="4" y="0"/>
+								<AbsDimension x="15" y="0"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
-					<Color r="1" g="1" b="1" />
 				</FontString>
 				<!-- Player DKP -->
 				<FontString name="$parentDKP" justifyH="LEFT" inherits="GameFontNormal">
@@ -34,7 +47,7 @@
 				<!-- Guild rank -->
 				<FontString name="$parentRank" justifyH="LEFT" inherits="GameFontNormal">
 					<Size>
-						<AbsDimension x="220" y="16"/>
+						<AbsDimension x="200" y="16"/>
 					</Size>
 					<Anchors>
 						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentDKP"/>
@@ -130,7 +143,7 @@
 	<!--	DKPList UI Frame	-->
 	<Frame name="DKPListUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
-			<AbsDimension x="460" y="475" />
+			<AbsDimension x="460" y="480" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -153,7 +166,7 @@
 			<!-- DKP list frame -->
 			<Frame name="$parentTableList">
 				<Size>
-					<AbsDimension x="430" y="330"/>
+					<AbsDimension x="430" y="332"/>
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT">
