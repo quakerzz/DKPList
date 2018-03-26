@@ -130,7 +130,7 @@
 	<!--	DKPList UI Frame	-->
 	<Frame name="DKPListUIFrame" parent="UIParent" toplevel="true" hidden="true">
 		<Size>
-			<AbsDimension x="460" y="450" />
+			<AbsDimension x="460" y="475" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -158,7 +158,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT">
 						<Offset>
-							<AbsDimension x="16" y="-110"/>
+							<AbsDimension x="16" y="-135"/>
 						</Offset>
 					</Anchor>
 				</Anchors>
@@ -358,6 +358,38 @@
 				</Anchors>
 				<Scripts>
 					<OnClick>DKPList_IsInRaidButtonOnClick();</OnClick>
+				</Scripts>
+			</Button>
+
+			<!-- list of filters button -->
+			<Button name="DKPList_FiltersShownButton">
+				<Size>
+					<AbsDimension x="430" y="23" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset x="16" y="-105" />
+					</Anchor>
+				</Anchors>
+				<Layers>
+					<Layer>
+						<FontString name="$parentText" justifyH="LEFT" inherits="GameFontNormal">
+							<Size>
+								<AbsDimension x="425" y="16"/>
+							</Size>
+							<Anchors>
+								<Anchor point="LEFT">
+									<Offset>
+										<AbsDimension x="4" y="-1"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+							<Color r="1" g="1" b="1" />
+						</FontString>
+					</Layer>
+				</Layers>
+				<Scripts>
+					<OnLoad>DKPList_FiltersShownButtonOnLoad();</OnLoad>
 				</Scripts>
 			</Button>
 

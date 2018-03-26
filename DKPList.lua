@@ -6,6 +6,7 @@ local DKPList_RaidRosterTable			= { }
 local DKPList_GuildRosterTable			= { }
 local DKPList_CheckForInRaid = 0;
 local DKPList_ScrollCounter = 0;
+local DKPList_AllianceMode = 1;
 
 local CLASS_COLORS = {
 	{ "Druid",			{ 255,125, 10 } },	--255 	125 	10		1.00 	0.49 	0.04 	#FF7D0A
@@ -39,7 +40,7 @@ function DKPList_OnLoad()
 	this:RegisterEvent("PLAYER_ENTERING_WORLD");
 	DKPList_RefreshRoster();
 	DKPList_InitializeTableElements();
-    DKPList_MinimapButtonFrame:Show();
+	DKPList_MinimapButtonFrame:Show();
 end
 
 function SOTA_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
@@ -158,16 +159,6 @@ function DKPList_RefreshRaidRoster()
 	table.sort(DKPList_RaidRosterTable, DKPList_compare);
 end
 
-function DKPList_CanReadNotes()
-	if SOTA_CONFIG_UseGuildNotes == 1 then
-		-- Guild notes can always be read; there is no WOW setting for that.
-		result = true;
-	else
-		result = CanViewOfficerNote();
-	end	
-	return result
-end
-
 --	Show top <n> in DKP window
 function DKPList_UpdateDKPElements()
 	local name, dkp, playerclass, rank;
@@ -203,7 +194,8 @@ function DKPList_UpdateDKPElements()
 		getglobal(frame:GetName().."Rank"):SetText(rank);
 
 		frame:Show();
-    end
+	end
+	DKPList_FiltersShownButtonOnLoad();
 end
 
 function DKPList_GetClassColorCodes(classname)
@@ -267,6 +259,7 @@ function DKPList_MageButtonOnClick(arg1)
 end
 
 function DKPList_PaladinButtonOnClick()
+	if DKPList_AllianceMode == 0 then return end
 	if arg1 == "LeftButton" then
 		if CLASS_FILTER[4][2] == 0 then CLASS_FILTER[4][2] = 1
 		else CLASS_FILTER[4][2] = 0 end
@@ -303,6 +296,7 @@ function DKPList_RogueButtonOnClick()
 end
 
 function DKPList_ShamanButtonOnClick()
+	if DKPList_AllianceMode == 1 then return end
 	if arg1 == "LeftButton" then
 		if CLASS_FILTER[7][2] == 0 then CLASS_FILTER[7][2] = 1
 		else CLASS_FILTER[7][2] = 0 end
@@ -342,17 +336,19 @@ function DKPList_ShowClassButtons()
 	DKPList_DruidButton:Show();
 	DKPList_HunterButton:Show();
 	DKPList_MageButton:Show();
-	DKPList_PaladinButton:Show();
+	if DKPList_AllianceMode == 1 then DKPList_PaladinButton:Show()
+	else DKPList_PaladinButton:Disable() end
 	DKPList_PriestButton:Show();
 	DKPList_RogueButton:Show();
-	DKPList_ShamanButton:Show();
+	if DKPList_AllianceMode == 1 then DKPList_ShamanButton:Disable()
+	else DKPList_ShamanButton:Show() end
 	DKPList_WarlockButton:Show();
 	DKPList_WarriorButton:Show();
 end
 
 function DKPList_IsInRaidButtonOnClick()
 	if DKPList_CheckForInRaid == 0 then DKPList_CheckForInRaid = 1
-	else DKPList_CheckForInRaid = 0 end;
+	else DKPList_CheckForInRaid = 0 end
 	DKPList_RefreshRoster();
 	DKPList_UpdateDKPElements();
 end
@@ -370,6 +366,41 @@ function DKPList_FilterAllClasses()
 	for n=1,getn(CLASS_FILTER),1 do
 		CLASS_FILTER[n][2] = 0;
 	end
+end
+
+function DKPList_FiltersShownButtonOnLoad()
+	if DKPList_AllianceMode == 1 then CLASS_FILTER[7][2] = 0
+	else CLASS_FILTER[4][2] = 0 end
+
+	local frame = getglobal("DKPList_FiltersShownButton");
+
+	getglobal(frame:GetName().."Text"):SetText("Showing: ");
+	local text = getglobal(frame:GetName().."Text"):GetText()
+	local numClassesShown = 0;
+	for n=1,getn(CLASS_FILTER),1 do
+		if CLASS_FILTER[n][2] == 1 then
+			text = text ..CLASS_FILTER[n][1] ..", "
+			numClassesShown = numClassesShown + 1;
+		end
+	end
+	text = string.sub(text, 1, string.len(text) - 2)
+
+	if DKPList_AllianceMode == 1 then
+		if numClassesShown == getn(CLASS_FILTER) - 1 and CLASS_FILTER[7][2] == 0 then
+			text = getglobal(frame:GetName().."Text"):GetText() .."All Classes"
+		end
+	else
+		if numClassesShown == getn(CLASS_FILTER) - 1 and CLASS_FILTER[4][2] == 0 then
+			text = getglobal(frame:GetName().."Text"):GetText() .."All Classes"
+		end
+	end
+	
+	if DKPList_CheckForInRaid == 1 then
+		text = text .." - In Raid only"
+	else
+		text = text .." - In Guild"
+	end
+	getglobal(frame:GetName().."Text"):SetText(text);
 end
 
 function DKPList_CloseUI()
