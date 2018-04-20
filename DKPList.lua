@@ -44,6 +44,11 @@ function DKPList_OnLoad()
 end
 
 function SOTA_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
+	if (event == "GUILD_ROSTER_UPDATE") then
+		DKPList_RequestUpdateGuildRoster()
+		DKPList_RefreshRoster()
+		DKPList_UpdateDKPElements()
+    end
 end
 
 function DKPList_OnClickMinimapButton()
