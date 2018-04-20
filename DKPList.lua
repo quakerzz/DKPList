@@ -45,7 +45,6 @@ end
 
 function SOTA_OnEvent(event, arg1, arg2, arg3, arg4, arg5)
 	if (event == "GUILD_ROSTER_UPDATE") then
-		DKPList_RequestUpdateGuildRoster()
 		DKPList_RefreshRoster()
 		DKPList_UpdateDKPElements()
     end
@@ -64,10 +63,6 @@ end
 --	RaidRoster will update internal raid roster table.
 --	GuildRoster will update guild roster table
 --
-
-function DKPList_RequestUpdateGuildRoster()
-	GuildRoster()
-end
 
 --[[
 	Update the guild roster status cache: members and DKP.
@@ -222,12 +217,17 @@ function DKPList_GetClassColorCodes(classname)
 end
 
 function DKPList_RefreshRoster()
+	local ShowOffline = GetGuildRosterShowOffline()
+	SetGuildRosterShowOffline(true)
 	if DKPList_CheckForInRaid == 0 then 
 		DKPList_RefreshGuildRoster()
 	else 
 		DKPList_RefreshGuildRoster()
 		DKPList_RefreshRaidRoster() 
 	end
+	if ShowOffline == 1 then
+		SetGuildRosterShowOffline(true)
+	else SetGuildRosterShowOffline(false) end
 end
 
 function DKPList_DruidButtonOnClick()
