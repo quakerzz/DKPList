@@ -6,7 +6,7 @@ local DKPList_RaidRosterTable			= { }
 local DKPList_GuildRosterTable			= { }
 local DKPList_CheckForInRaid = 0;
 local DKPList_ScrollCounter = 0;
-local DKPList_AllianceMode = 1;
+local DKPList_AllianceMode = 0;
 
 local CLASS_COLORS = {
 	{ "Druid",			{ 255,125, 10 } },	--255 	125 	10		1.00 	0.49 	0.04 	#FF7D0A
