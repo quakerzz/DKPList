@@ -1,6 +1,6 @@
 # DKPList
 
-A small addon to display dkp values stored in the public guild note by [SotA](https://github.com/Sentilix/sota).
+A small addon to display dkp values stored in the officer's guild note by [SotA](https://github.com/Sentilix/sota).
 
 Left click the minimap button to display the interface. Right click and hold the minimap button to drag it.
 
