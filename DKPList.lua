@@ -87,7 +87,7 @@ function DKPList_RefreshGuildRoster()
 			zone = "";
 		end
 
-		note = publicnote
+		note = officernote
 
 		if not note or note == "" then
 			note = "<0>";
@@ -107,6 +107,7 @@ function DKPList_RefreshGuildRoster()
 			rank = "";
 			class = "";
 			publicnote = "";
+			officernote = "";
 			dkp = "";
 		else
 			DKPList_GuildRosterTable[getn(DKPList_GuildRosterTable) + 1] = { name, (1*dkp), class, rank, online, zone }
